@@ -36,8 +36,19 @@ body{
 .content-body{
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: 30%;
     margin-top: 10px;
     margin-left: 25PX;
 }
 
+.content-body2{
+    display: flex;
+    flex-direction: column;
+    height: 30%;
+    margin-top: 10px;
+    margin-left: 25PX;
+}
+
+.content-body-botons{
+    display: inline;
+}
