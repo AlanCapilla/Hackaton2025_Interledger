@@ -1,0 +1,35 @@
+{
+  "name": "hackaton2025_interledger",
+  "version": "1.0.0",
+  "description": "Implementar la API de Interledger para realizar pagos en regiones aisladas financieramente",
+  "homepage": "https://github.com/AlanCapilla/Hackaton2025_Interledger#readme",
+  "bugs": {
+    "url": "https://github.com/AlanCapilla/Hackaton2025_Interledger/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlanCapilla/Hackaton2025_Interledger.git"
+  },
+  "license": "ISC",
+  "author": "Alan Capilla Guzman",
+  "contributors": [
+    "Maritza Jimenez",
+    "Martin Bado",
+    "Atzin Eli Villegas Carreno"
+  ],
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "node private.js"
+  },
+  "dependencies": {
+    "@interledger/open-payments": "^1.0.0",
+    "axios": "^1.6.0",
+    "dotenv": "^16.4.0",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.0"
+  }
+}
+
