@@ -16,13 +16,39 @@
     <title>NÜBÜK</title>
 </head>
 <body>
-    <div class="header">
+   
+    <!-- Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header mejorado -->
+        <div class="header">
+            <div class="header-options-us"> 
+                <label>Hola, Usuario</label>
+                <button class="profile-btn" aria-label="Perfil de usuario"></button>
+            </div>
+            
+            <div class="header-options-noti">
+                <button class="notifications-btn has-notifications" aria-label="Notificaciones">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </button>
+            </div>
+        </div>
         
-        <div class="header-options-us"> <label>Hola, US </label><button>perfil</button></div>
-        
-        <div class="header-options-noti"><button>Notificaciones</button></div>
-        
+        <div class="content">
+            <h1>NÜBÜK - Tu Billetera Digital</h1>
+               </div>
     </div>
+
+    <script>
+        // Script para alternar la animación de notificaciones (opcional)
+        document.querySelector('.notifications-btn').addEventListener('click', function() {
+            this.classList.remove('has-notifications');
+            document.querySelector('.notification-badge').textContent = '0';
+        });
+    </script>
     <div class="body">
         <div class="content-body">
             <div class="content-body-wallet">Disponible</div>
