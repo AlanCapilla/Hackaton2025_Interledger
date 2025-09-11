@@ -11,7 +11,7 @@ app.use(cors());
 app.use(express.json());
 
 const billeteraData = {
-    saldo: 12345678.901234
+    saldo: 10000
 };
 
 app.get("/saldo", (req, res) => {
