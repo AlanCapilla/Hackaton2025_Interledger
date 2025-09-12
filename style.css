@@ -23,7 +23,9 @@ body{
             align-items: center;
             background: linear-gradient(135deg, #d81684, #d6518f);
             padding: 15px 20px;
-            border-radius: 12px;
+            
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             color: white;
         }
@@ -128,10 +130,11 @@ body{
         
         /* Contenedor de ejemplo para mostrar el header en contexto */
         .container {
-            max-width: 1000px;
+            max-width: 100%;
             margin: 0 auto;
             background: white;
-            border-radius:15px;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
             overflow: hidden;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
@@ -143,7 +146,7 @@ body{
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-height: 10%;
+            
         }
         
         h1 {
@@ -182,11 +185,27 @@ body{
             font-weight: 500;
         }
         .flex-container{
-    display: flex; /* Usa Flexbox para alinear elementos */
-    justify-content: center; /* Centra horizontalmente */
-    align-items: center; /* Centra verticalmente (si el contenedor tiene altura) */
-    min-height: 50vh; /* Para que ocupe toda la altura de la ventana y se vea centrado verticalmente */
-    /* Puedes ajustar min-height si ya tienes otros elementos en tu página */
-
-    }
-   
+            display: flex; /* Usa Flexbox para alinear elementos */
+            flex-direction: column;
+            justify-content: center; /* Centra horizontalmente */
+            align-items: center; /* Centra verticalmente (si el contenedor tiene altura) */
+            min-height: 50vh; /* Para que ocupe toda la altura de la ventana y se vea centrado verticalmente */
+            /* Puedes ajustar min-height si ya tienes otros elementos en tu página */
+            gap: 20px; /* Espacio entre los elementos */
+        }
+        
+        .flex-container button {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
