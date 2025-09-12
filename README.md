@@ -1,4 +1,5 @@
-¿Cuál es el problema?
+📌¿Cuál es el problema?
+
 El aislamiento financiero de los vendedores artesanales, quienes no cuentan con acceso fácil a medios de pago digitales. Esto les genera pérdidas monetarias y limita sus oportunidades de venta, especialmente con compradores extranjeros.
 
 📌 ¿Qué tecnología usarán?
