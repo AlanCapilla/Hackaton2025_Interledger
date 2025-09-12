@@ -1,72 +1,627 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-        <!-- CSS de jQuery Mobile -->
-    <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
-
-    <!-- jQuery (lib core) -->
-    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
-
-    <!-- JavaScript de jQuery Mobile -->
-    <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
-
-    <link rel="stylesheet" href="style.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NÜBÜK Cobros</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #ff4e7d, #ff8da1);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: #e53f71;
+            color: white;
+        }
+        
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .header button {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .header button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .notifications-btn {
+            position: relative;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            color: white;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+        
+        .notifications-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ff3366;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .body {
+            padding: 30px 20px;
+        }
+        
+        .flex-container {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .input-group label {
+            font-weight: 500;
+            color: #333;
+            font-size: 16px;
+        }
+        
+        input[type="number"] {
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+        
+        input[type="number"]:focus {
+            border-color: #e53f71;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(229, 63, 113, 0.1);
+        }
+        
+        .generate-btn {
+            background: #e53f71;
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(229, 63, 113, 0.4);
+        }
+        
+        .generate-btn:hover {
+            background: #d12a5e;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(229, 63, 113, 0.5);
+        }
+        
+        .generate-btn:active {
+            transform: translateY(0);
+        }
+        
+        .qr-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-top: 10px;
+            padding: 20px;
+            border-radius: 15px;
+            background: #fff5f7;
+        }
+        
+        .qr-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #e53f71;
+        }
+        
+        #qrcode {
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .payment-info {
+            background: #ffe6eb;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+        
+        .payment-info p {
+            margin: 8px 0;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .payment-address {
+            word-break: break-all;
+            font-family: monospace;
+            background: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 5px;
+            font-size: 12px;
+        }
+        
+        .success-message {
+            background: #4cd964;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 20px;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Responsive design */
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 1.2rem;
+            }
+            
+            input[type="number"] {
+                padding: 12px;
+                font-size: 16px;
+            }
+            
+            .generate-btn {
+                padding: 14px;
+                font-size: 16px;
+            }
+            
+            .body {
+                padding: 20px 15px;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            .header {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 1.1rem;
+            }
+        }
+        
+        .loading {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #e53f71;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+           0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .app-name {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #e53f71;
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 15px;
+            background: #e53f71;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 40px;
+            box-shadow: 0 4px 10px rgba(229, 63, 113, 0.4);
+        }
+        
+        .wallet-connect {
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .wallet-btn {
+            background: #e53f71;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .wallet-btn:hover {
+            background: #d12a5e;
+        }
+
+        #wallet-info {
+            margin-top: 10px;
+            padding: 10px;
+            background: #ffe6eb;
+            border-radius: 10px;
+            font-size: 14px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-   
-    <!-- Font Awesome para iconos -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
     <div class="container">
-        <!-- Header mejorado -->
+        <!-- Header -->
         <div class="header">
             <div class="header-options-us"> 
-                <button onclick="location.href = 'index.html'"><img src="img/arrow_14034415.png" alt="" style="width: 20px;"></button>
+                <button onclick="location.href = 'index.html'">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
             </div>
             <div class="content">
-            <h1>COBROS</h1>
-               </div>
-            
+                <h1>COBROS</h1>
+            </div>
             <div class="header-options-noti">
                 <button class="notifications-btn has-notifications" aria-label="Notificaciones">
                     <i class="fas fa-bell"></i>
                     <span class="notification-badge">3</span>
                 </button>
             </div>
+        </div>
+
+        <div class="body">
+            <div class="app-name">
+                <div class="logo">N</div>
+                NÜBÜK
+            </div>
             
+            <!-- Sección de conexión de wallet -->
+            <div class="wallet-connect" id="wallet-connect-container">
+                <button id="connect-wallet-btn" class="wallet-btn">
+                    <i class="fas fa-wallet"></i> Conectar Wallet
+                </button>
+                <div id="wallet-info" class="hidden">
+                    <p>Wallet conectada: <span id="wallet-address"></span></p>
+                </div>
+            </div>
+            
+            <div class="flex-container">
+                <form id="payment-form">
+                    <div class="input-group">
+                        <label for="amount">Cantidad a cobrar (USD)</label>
+                        <input type="number" id="amount" name="amount" placeholder="0.00" required step="0.01" min="0.01">
+                    </div>
+                    <button type="submit" class="generate-btn">Generar cobro</button>
+                </form>
+                
+                <div class="loading hidden" id="loading">
+                    <div class="loading-spinner"></div>
+                    <p>Generando dirección de pago...</p>
+                </div>
+                
+                <div class="qr-container hidden" id="qr-container">
+                    <div class="qr-title">Escanea para pagar</div>
+                    <div id="qrcode"></div>
+                    
+                    <div class="payment-info">
+                        <p><strong>Monto:</strong> <span id="amount-display">0.00</span> USD</p>
+                        <p><strong>Dirección de pago:</strong></p>
+                        <div class="payment-address" id="payment-address"></div>
+                        <p style="margin-top: 10px; font-size: 12px; color: #666;">Esta dirección expirará en 15 minutos</p>
+                    </div>
+                </div>
+                
+                <div class="success-message hidden" id="success-message">
+                    <i class="fas fa-check-circle"></i> Pago recibido correctamente
+                </div>
+            </div>
         </div>
     </div>
         
-
     <script>
-        // Script para alternar la animación de notificaciones (opcional)
+        // Variables globales para almacenar los datos de tu wallet
+        let walletAddress = '';
+        let accessToken = '';
+        let paymentPointer = '$ilp.interledger-test.dev/75abb8be'; // Tu payment pointer
+        
+        // Elementos de la UI
+        const connectBtn = document.getElementById('connect-wallet-btn');
+        const walletInfo = document.getElementById('wallet-info');
+        const walletAddressSpan = document.getElementById('wallet-address');
+        const paymentForm = document.getElementById('payment-form');
+        const loadingElement = document.getElementById('loading');
+        const qrContainer = document.getElementById('qr-container');
+        const successMessage = document.getElementById('success-message');
+        
+        // Verificar si ya hay una sesión activa al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            if (checkExistingSession()) {
+                updateWalletUI();
+            }
+        });
+        
+        // Script para notificaciones
         document.querySelector('.notifications-btn').addEventListener('click', function() {
             this.classList.remove('has-notifications');
             document.querySelector('.notification-badge').textContent = '0';
+            alert('Notificaciones marcadas como leídas');
+        });
+        
+        // Función para generar un identificador único
+        function generateUUID() {
+            return 'xxxx-xxxx-4xxx-yxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0;
+                const v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+        
+        // Función para verificar si ya hay una sesión activa
+        function checkExistingSession() {
+            const savedToken = localStorage.getItem('opAccessToken');
+            const savedAddress = localStorage.getItem('opWalletAddress');
+            
+            if (savedToken && savedAddress) {
+                accessToken = savedToken;
+                walletAddress = savedAddress;
+                return true;
+            }
+            return false;
+        }
+        
+        // Función para actualizar la UI de la wallet
+        function updateWalletUI() {
+            walletInfo.classList.remove('hidden');
+            walletAddressSpan.textContent = walletAddress.substring(0, 20) + '...';
+            connectBtn.textContent = 'Wallet Conectada';
+            connectBtn.disabled = true;
+        }
+        
+        // Función para conectar con tu wallet de Open Payments
+        async function connectOpenPaymentsWallet() {
+            try {
+                // Simulamos la conexión con el servidor de Open Payments
+                // En una implementación real, aquí harías una llamada a la API de tu proveedor
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                // Generamos un token de acceso simulado (en producción sería real)
+                accessToken = 'nubuk-token-' + generateUUID();
+                
+                // Usamos tu payment pointer real
+                walletAddress = paymentPointer;
+                
+                // Guardar en localStorage para persistencia
+                localStorage.setItem('opAccessToken', accessToken);
+                localStorage.setItem('opWalletAddress', walletAddress);
+                
+                // Actualizar UI
+                updateWalletUI();
+                
+                return true;
+            } catch (error) {
+                console.error('Error conectando con Open Payments:', error);
+                alert('Error conectando con la wallet. Por favor, intenta nuevamente.');
+                return false;
+            }
+        }
+        
+        // Manejador para el botón de conectar wallet
+        connectBtn.addEventListener('click', async function() {
+            this.textContent = 'Conectando...';
+            this.disabled = true;
+            
+            const connected = await connectOpenPaymentsWallet();
+            
+            if (!connected) {
+                this.textContent = 'Conectar Wallet';
+                this.disabled = false;
+            }
+        });
+        
+        // Función para generar una solicitud de pago
+        async function generatePaymentRequest(amount) {
+            try {
+                // Verificar si tenemos una sesión activa
+                if (!accessToken) {
+                    const hasSession = checkExistingSession();
+                    if (!hasSession) {
+                        const connected = await connectOpenPaymentsWallet();
+                        if (!connected) {
+                            throw new Error('No se pudo conectar con la wallet');
+                        }
+                    }
+                }
+                
+                // Crear una solicitud de pago
+                // En una implementación real, aquí harías una llamada a la API de Open Payments
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // Generar un ID único para esta transacción
+                const paymentId = generateUUID();
+                
+                // Crear la URL de pago (usando tu payment pointer real)
+                const paymentUrl = `web+ilp://${paymentPointer}?amount=${amount}&assetCode=USD&memo=Cobro+NÜBÜK&id=${paymentId}`;
+                
+                return {
+                    url: paymentUrl,
+                    id: paymentId
+                };
+            } catch (error) {
+                console.error('Error generando solicitud de pago:', error);
+                throw error;
+            }
+        }
+        
+        // Función para generar el código QR
+        function generateQRCode(text) {
+            // Limpiamos el contenedor del QR
+            document.getElementById('qrcode').innerHTML = '';
+            
+            // Generamos el código QR
+            QRCode.toCanvas(document.getElementById('qrcode'), text, {
+                width: 200,
+                margin: 1,
+                color: {
+                    dark: '#000000',
+                    light: '#ffffff'
+                }
+            }, function(error) {
+                if (error) console.error(error);
+            });
+        }
+        
+        // Función para verificar el estado del pago
+        async function checkPaymentStatus(paymentId) {
+            // En una implementación real, aquí harías polling al servidor
+            // para verificar si el pago se ha completado
+            
+            // Simulamos una verificación de pago exitosa después de un tiempo aleatorio
+            const delay = Math.floor(Math.random() * 10000) + 5000;
+            
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    // Simulamos un pago exitoso el 80% de las veces
+                    const success = Math.random() > 0.2;
+                    resolve(success);
+                }, delay);
+            });
+        }
+        
+        // Manejador del evento submit del formulario
+        paymentForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const amount = document.getElementById('amount').value;
+            if (!amount || amount <= 0) {
+                alert('Por favor, introduce una cantidad válida');
+                return;
+            }
+            
+            // Verificar que la wallet esté conectada
+            if (!accessToken) {
+                alert('Por favor, conecta tu wallet primero');
+                return;
+            }
+            
+            // Mostrar loading
+            loadingElement.classList.remove('hidden');
+            qrContainer.classList.add('hidden');
+            successMessage.classList.add('hidden');
+            
+            try {
+                // Generamos la solicitud de pago
+                const paymentRequest = await generatePaymentRequest(amount);
+                
+                // Generamos el código QR
+                generateQRCode(paymentRequest.url);
+                
+                // Mostramos la información de pago
+                document.getElementById('amount-display').textContent = amount;
+                document.getElementById('payment-address').textContent = paymentRequest.url;
+                
+                // Ocultamos loading y mostramos QR
+                loadingElement.classList.add('hidden');
+                qrContainer.classList.remove('hidden');
+                
+                // Verificar el estado del pago en segundo plano
+                const paymentSuccess = await checkPaymentStatus(paymentRequest.id);
+                
+                if (paymentSuccess) {
+                    successMessage.classList.remove('hidden');
+                    
+                    // Ocultamos el QR después de un pago exitoso
+                    setTimeout(() => {
+                        qrContainer.classList.add('hidden');
+                        successMessage.classList.add('hidden');
+                        paymentForm.reset();
+                    }, 5000);
+                } else {
+                    alert('El pago no se completó. Por favor, intenta nuevamente.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al generar la solicitud de pago. Inténtalo de nuevo.');
+                loadingElement.classList.add('hidden');
+            }
         });
     </script>
-        
-    <div class="body">
-
-            
-            
-        <!-- Flexbox section añadida -->
-        <div class="flex-container">
-            <Form>
-                <input type="number" id="amount" name="amount" placeholder="Cantidad a cobrar" required>
-                <button>Generar cobro</button>
-            </Form>
-            <canvas id="urlcode">
-                
-            </canvas>
-        </div>
-    
-    
-    </div>
-
-
 </body>
 </html>
