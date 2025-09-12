@@ -1,75 +1,442 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-        <!-- CSS de jQuery Mobile -->
+    <!-- CSS de jQuery Mobile -->
     <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
-
     <!-- jQuery (lib core) -->
     <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
-
     <!-- JavaScript de jQuery Mobile -->
     <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
-
-    <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Biblioteca para códigos QR -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NÜBÜK Pagos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #ff4e7d, #ff8da1);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: #e53f71;
+            color: white;
+        }
+        
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .header button {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .header button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .header button img {
+            width: 20px;
+            filter: invert(1);
+        }
+        
+        .notifications-btn {
+            position: relative;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            color: white;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+        
+        .notifications-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ff3366;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .body {
+            padding: 30px 20px;
+        }
+        
+        .flex-container {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .input-group label {
+            font-weight: 500;
+            color: #333;
+            font-size: 16px;
+        }
+        
+        input[type="text"], input[type="number"] {
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        input[type="text"]:focus, input[type="number"]:focus {
+            border-color: #e53f71;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(229, 63, 113, 0.1);
+        }
+        
+        .pay-btn {
+            background: #e53f71;
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(229, 63, 113, 0.4);
+            width: 100%;
+        }
+        
+        .pay-btn:hover {
+            background: #d12a5e;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(229, 63, 113, 0.5);
+        }
+        
+        .pay-btn:active {
+            transform: translateY(0);
+        }
+        
+        #qrcode {
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            display: none;
+            max-width: 200px;
+        }
+        
+        .success-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4cd964;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+            transform: translateX(100%);
+            transition: transform 0.5s ease;
+        }
+        
+        .success-notification.show {
+            transform: translateX(0);
+        }
+        
+        .loading {
+            text-align: center;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #e53f71;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 1.2rem;
+            }
+            
+            input[type="text"], input[type="number"] {
+                padding: 12px;
+                font-size: 16px;
+            }
+            
+            .pay-btn {
+                padding: 14px;
+                font-size: 16px;
+            }
+            
+            .body {
+                padding: 20px 15px;
+            }
+        }
+    </style>
 </head>
 <body>
-   
-    <!-- Font Awesome para iconos -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
     <div class="container">
         <!-- Header mejorado -->
         <div class="header">
             <div class="header-options-us"> 
-                <button onclick="location.href = 'index.html'"><img src="img/arrow_14034415.png" alt="" style="width: 20px;"></button>
+                <button onclick="location.href = 'index.html'">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
             </div>
             <div class="content">
-            <h1>PAGOS</h1>
-               </div>
-            
+                <h1>PAGOS</h1>
+            </div>
             <div class="header-options-noti">
                 <button class="notifications-btn has-notifications" aria-label="Notificaciones">
                     <i class="fas fa-bell"></i>
                     <span class="notification-badge">3</span>
                 </button>
             </div>
-            
+        </div>
+
+        <div class="body">
+            <!-- Flexbox section añadida -->
+            <div class="flex-container">
+                <form id="payment-form">
+                    <div class="input-group">
+                        <label for="url">URL cobrador</label>
+                        <input type="text" id="url" name="url" placeholder="$rafiki.money/usuario" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="amount">Cantidad a pagar (USD)</label>
+                        <input type="number" id="amount" name="amount" placeholder="0.00" required step="0.01" min="0.01">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="concept">Concepto</label>
+                        <input type="text" id="concept" name="concept" placeholder="Pago por servicios" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="key">Wallet Usuario</label>
+                        <input type="text" id="key" name="key" placeholder="$rafiki.money/miwallet" required>
+                    </div>
+                    
+                    <button type="submit" class="pay-btn">
+                        <i class="fas fa-money-bill-wave"></i> Realizar Pago
+                    </button>
+                </form>
+                
+                <div class="loading" id="loading">
+                    <div class="loading-spinner"></div>
+                    <p>Procesando pago...</p>
+                </div>
+                
+                <canvas id="qrcode"></canvas>
+            </div>
         </div>
     </div>
-        
+    
+    <!-- Notificación de éxito -->
+    <div class="success-notification" id="success-notification">
+        <i class="fas fa-check-circle"></i>
+        <span>¡Pago realizado con éxito!</span>
+    </div>
 
     <script>
-        // Script para alternar la animación de notificaciones (opcional)
+        // Script para alternar la animación de notificaciones
         document.querySelector('.notifications-btn').addEventListener('click', function() {
             this.classList.remove('has-notifications');
             document.querySelector('.notification-badge').textContent = '0';
         });
-    </script>
         
-    <div class="body">
-
+        // Función para mostrar notificación de éxito
+        function showSuccessNotification() {
+            const notification = document.getElementById('success-notification');
+            notification.classList.add('show');
             
+            // Ocultar después de 5 segundos
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 5000);
+        }
+        
+        // Función para simular pago con Open Payments
+        async function processOpenPayment(paymentData) {
+            // Simulamos una demora de red
+            await new Promise(resolve => setTimeout(resolve, 2000));
             
-        <!-- Flexbox section añadida -->
-        <div class="flex-container">
-            <Form>
-                <input type="text" id="url" name="url" placeholder="URL cobrador" required>
-                <input type="number" id="amount" name="amount" placeholder="Cantidad a pagar" required>
-                <input type="text" id="concept" name="concept" placeholder="Concepto" required>
-                <input type="text" id="key" name="key" placeholder="Wallet_Usuario" required>
-                <button>Pagar</button>
-            </Form>
-            <canvas id="qrcode">
-
-            </canvas>
-        </div>
-    
-    
-    </div>
-
-
+            // En una implementación real, aquí se conectaría con la API de Open Payments
+            // const response = await fetch('https://open-payments-api.com/pay', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //         'Authorization': 'Bearer YOUR_ACCESS_TOKEN'
+            //     },
+            //     body: JSON.stringify(paymentData)
+            // });
+            // 
+            // if (!response.ok) {
+            //     throw new Error('Error en el pago');
+            // }
+            // 
+            // return await response.json();
+            
+            // Simulamos una respuesta exitosa
+            return {
+                success: true,
+                transactionId: 'txn_' + Math.random().toString(36).substr(2, 9),
+                amount: paymentData.amount,
+                timestamp: new Date().toISOString()
+            };
+        }
+        
+        // Función para generar código QR
+        function generateQRCode(text) {
+            // Limpiamos el contenedor del QR
+            const qrContainer = document.getElementById('qrcode');
+            qrContainer.innerHTML = '';
+            
+            // Generamos el código QR
+            QRCode.toCanvas(qrContainer, text, {
+                width: 200,
+                margin: 1,
+                color: {
+                    dark: '#000000',
+                    light: '#ffffff'
+                }
+            }, function(error) {
+                if (error) console.error(error);
+                qrContainer.style.display = 'block';
+            });
+        }
+        
+        // Manejador del evento submit del formulario
+        document.getElementById('payment-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const url = document.getElementById('url').value;
+            const amount = document.getElementById('amount').value;
+            const concept = document.getElementById('concept').value;
+            const key = document.getElementById('key').value;
+            
+            if (!url || !amount || !concept || !key) {
+                alert('Por favor, completa todos los campos');
+                return;
+            }
+            
+            // Mostrar loading
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('qrcode').style.display = 'none';
+            
+            try {
+                // Generar código QR con los datos de pago
+                const paymentData = {
+                    receiver: url,
+                    amount: amount,
+                    concept: concept,
+                    sender: key,
+                    assetCode: 'USD'
+                };
+                
+                const qrData = `web+ilp://${url}?amount=${amount}&sender=${key}&memo=${encodeURIComponent(concept)}`;
+                generateQRCode(qrData);
+                
+                // Procesar pago con Open Payments
+                const paymentResult = await processOpenPayment(paymentData);
+                
+                if (paymentResult.success) {
+                    // Mostrar notificación de éxito
+                    showSuccessNotification();
+                    
+                    // Limpiar formulario después de pago exitoso
+                    setTimeout(() => {
+                        document.getElementById('payment-form').reset();
+                        document.getElementById('qrcode').style.display = 'none';
+                    }, 3000);
+                } else {
+                    alert('Error en el procesamiento del pago');
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al procesar el pago. Por favor, intenta nuevamente.');
+            } finally {
+                // Ocultar loading
+                document.getElementById('loading').style.display = 'none';
+            }
+        });
+        
+        // Generar código QR inicial con datos de ejemplo
+        window.addEventListener('load', function() {
+            const initialData = "web+ilp://$rafiki.money/example?amount=10.00&memo=Ejemplo%20de%20pago";
+            generateQRCode(initialData);
+        });
+    </script>
 </body>
 </html>
