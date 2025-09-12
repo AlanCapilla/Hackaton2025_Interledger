@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="style.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NÜBÜK</title>
+    <title>NÜBÜK Cobros</title>
 </head>
 <body>
    
@@ -24,11 +24,10 @@
         <!-- Header mejorado -->
         <div class="header">
             <div class="header-options-us"> 
-                <label>Hola, Usuario</label>
-                <button class="profile-btn" aria-label="Perfil de usuario"></button>
+                <button onclick="location.href = 'index.html'"><img src="img/arrow_14034415.png" alt="" style="width: 20px;"></button>
             </div>
             <div class="content">
-            <h1>NÜBÜK</h1>
+            <h1>COBROS</h1>
                </div>
             
             <div class="header-options-noti">
@@ -56,14 +55,13 @@
             
         <!-- Flexbox section añadida -->
         <div class="flex-container">
-            <button class="checkout-btn" onclick="location.href='cobrar.html'">
-                <img src="img/contract_2695317.png" alt="cobrar.png" class="icon" style="width: 120px;">
-                Cobrar
-            </button>
-            <button class="pay-btn" onclick="location.href='pagar.html'">
-                <img src="img/money_2418524.png" alt="" class="icon" style="width: 120px;">
-                Pagar
-            </button>
+            <Form>
+                <input type="number" id="amount" name="amount" placeholder="Cantidad a cobrar" required>
+                <button>Generar cobro</button>
+            </Form>
+            <canvas id="urlcode">
+                
+            </canvas>
         </div>
     
     
